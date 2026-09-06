@@ -1,0 +1,27 @@
+# vdirsyncer config — Fastmail CalDAV.
+# Placeholders are filled by scripts/setup.sh. Never commit a filled copy.
+#
+#   __STATUS_PATH__     where vdirsyncer stores sync state   (default ~/.vdirsyncer/status)
+#   __FASTMAIL_USER__   your full Fastmail address           (e.g. you@example.com)
+#   __FASTMAIL_PASSWORD__ a CalDAV-scoped app password (see README)
+#   __LOCAL_STORE__     where calendars are synced locally   (default ~/.calendars/fm)
+
+[general]
+status_path = "__STATUS_PATH__"
+
+[pair fastmail]
+a = "fastmail_remote"
+b = "fastmail_local"
+collections = ["from a", "from b"]
+metadata = ["color"]
+
+[storage fastmail_remote]
+type = "caldav"
+url = "https://caldav.fastmail.com/"
+username = "__FASTMAIL_USER__"
+password = "__FASTMAIL_PASSWORD__"
+
+[storage fastmail_local]
+type = "filesystem"
+fileext = ".ics"
+path = "__LOCAL_STORE__"

@@ -1,0 +1,30 @@
+# khal config — STATIC TAIL, appended verbatim by scripts/setup.sh after the
+# generated [[...]] calendar sections. Keep this file in sync with [default]
+# expectations of the skill (dateformat %d-%m-%Y => `khal list 05-09-2026`).
+#
+# Calendar section shape (generated per discovered collection):
+#
+#   [[<name>]]
+#   path = <local store>/<uuid>/
+#   color = <named color>
+#   priority = <int>        # higher wins for day highlighting
+#   readonly = True         # optional; for holiday/birthday calendars
+#
+# Valid named colors: black, white, brown, yellow, dark gray, dark green,
+# dark blue, light gray, light green, light blue, dark magenta, dark cyan,
+# dark red, light magenta, light cyan, light red.
+
+[sqlite]
+path = __SQLITE_DB__
+
+[locale]
+dateformat = %d-%m-%Y
+longdateformat = %d %B %Y
+timeformat = %H:%M
+datetimeformat = %d-%m %H:%M
+longdatetimeformat = %d %B %Y %H:%M
+
+[default]
+default_calendar = personal
+highlight_event_days = True
+timedelta = 14d

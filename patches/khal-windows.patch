@@ -1,0 +1,47 @@
+--- a/khal/khalendar/vdir.py (stock get_etag_from_file)
++++ b/khal/khalendar/vdir.py (Windows-compatible)
+@@ inside get_etag_from_file() @@
+@@ -1,24 +1,30 @@
+     close_f = False
++    stat = None
+     if hasattr(f, "read"):
+         f.flush()
+         f = f.fileno()
++    elif isinstance(f, str) and os.path.isdir(f):
++        # Windows: os.open(dir) raises PermissionError, so stat the dir directly.
++        stat = os.stat(f)
+     elif isinstance(f, str):
+-        flags = 0
+-        if os.path.isdir(f):
+-            flags = os.O_DIRECTORY
+-        f = os.open(f, flags)
++        try:
++            # Some Windows setups reject fsync on read-only handles.
++            f = os.open(f, os.O_RDWR)
++        except OSError:
++            f = os.open(f, 0)
+         close_f = True
+ 
+-    # assure that all internal buffers associated with this file are
+-    # written to disk
+-    try:
+-        os.fsync(f)
+-        stat = os.fstat(f)
+-    finally:
+-        if close_f:
+-            os.close(f)
++    if stat is None:
++        # assure that all internal buffers associated with this file are
++        # written to disk
++        try:
++            os.fsync(f)
++            stat = os.fstat(f)
++        finally:
++            if close_f:
++                os.close(f)
+ 
+     mtime = getattr(stat, "st_mtime_ns", None)
+     if mtime is None:
+         mtime = stat.st_mtime
+-    return f"{mtime:.9f}"
++    return f"{mtime:.9f}"
